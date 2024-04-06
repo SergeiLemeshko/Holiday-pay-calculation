@@ -1,6 +1,120 @@
 body {
-    background-color: rgb(172, 165, 165);
+    background-color: rgb(205, 200, 200);
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+:root {
+    --primary-font: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5%;
+    flex-direction: column;
+}
+
+.input {
+    margin-bottom: 35px;
+}
+
+.input-file {
+	position: relative;
+	display: inline-block;
+}
+
+.input-file__btn, .button {
+	position: relative;
+	display: inline-block;
+	cursor: pointer;
+	outline: none;
+	text-decoration: none;
+    font-family: var(--primary-font);
+	vertical-align: middle;
+	color: rgb(255 255 255);
+	text-align: center;
+	border-radius: 4px;
+	background-color: #419152;
+	line-height: 22px;
+    width: 150px;
+	height: 40px;
+	padding: 10px 20px;
+	box-sizing: border-box;
+	border: none;
+	margin: 0;
+	transition: background-color 0.2s;
+}
+
+.button {
+    font-weight: 500;
+    font-size: 16px;
+    font-family: var(--primary-font);
+}
+
+.input-file__text {
+	padding: 0 10px;
+	line-height: 40px;
+	display: inline-block;
+}
+
+.input-file input[type=file] {
+	position: absolute;
+	z-index: -1;
+	opacity: 0;
+	display: block;
+	width: 0;
+	height: 0;
+}
+
+.input-file input[type=file]:focus + .input-file__btn {
+	box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+.input-file:hover .input-file__btn {
+	background-color: #59be6e;
+}
+
+.input-file:active .input-file__btn {
+	background-color: #2E703A;
+}
+
+.input-file input[type=file]:disabled + .input-file__btn {
+	background-color: #eee;
+}
+
+.warning {
+    position: absolute;
+    width: 200px;
+    margin: 20px 63px;
+}
+
+.button:focus {
+	box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+.button:hover {
+	background-color: #59be6e;
+}
+
+.button:active {
+	background-color: #2E703A;
+}
+
+.button:disabled {
+	background-color: #eee;
+}
+
+.table {
+    width: 700px;
+}
+
+.th {
+    text-align: left;
+}
+
+table, td, th {
+	border: 1px solid rgb(154, 154, 154);
 }

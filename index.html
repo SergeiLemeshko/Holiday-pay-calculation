@@ -8,10 +8,17 @@
     <title>Holiday pay calculation</title>
 </head>
 <body>
-    <input type="file" class="file-input">
-    <button class="button">Рассчитать</button>
-    <div id="output"></div>
-
+    <section class="container">
+        <div class="input">
+            <label class="input-file">
+                <input class="input-file__add" type="file" name="file">
+                <span class="input-file__btn">Выберите файл</span>           
+                <span class="input-file__text"></span>
+            </label>
+            <button class="button">Рассчитать</button>
+        </div>
+        <div id="output"></div>
+    </section>
     <script src="script.js"></script>
 </body>
 </html>

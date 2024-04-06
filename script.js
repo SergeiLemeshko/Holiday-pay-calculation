@@ -1,13 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const fileInput = document.querySelector('.file-input');
+  const fileInput = document.querySelector('.input-file__add');
   const calculateButton = document.querySelector('.button');
   const outputDiv = document.getElementById('output');
+  const inputText = document.querySelector('.input-file__text');
   let names = []; //массив Ф.И.О. каждого сотрудника
   let totalSalary = []; //массив общей ЗП каждого сотрудника
   let chunkedArray = []; // массивы с информацией по каждому сотруднику
 
-  //вешаем на кнопку "Рассчитать" слушатель события click
-  calculateButton.addEventListener('click', getData);
+  //показывает имя выбранного файла
+  function showFileText() {
+    inputText.innerHTML = fileInput.files[0].name;
+  };
+
+  //вешаем слушатель на получение названия загружаемого файла
+  fileInput.addEventListener('change', showFileText);
 
   //получает данные, делит на массивы по сотрудникам, предупреждает, если не выбран файл
   function getData() {
@@ -22,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         warningDiv.textContent = '';
       }, 2000);
       // Добавляем предупреждение на страницу
-      document.body.appendChild(warningDiv);
+      inputText.insertAdjacentElement('afterEnd', warningDiv);
       return;
     }
 
@@ -41,6 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     reader.readAsArrayBuffer(file);
   };
+
+  //вешаем на кнопку "Рассчитать" слушатель события click
+  calculateButton.addEventListener('click', getData);
 
   //делит общий массив объектов на отдельные массивы по сотрудникам
   function splitArrayIntoChunks(array, chunkSize) {
@@ -67,12 +76,14 @@ document.addEventListener('DOMContentLoaded', () => {
     outputDiv.innerHTML = '';
 
     const table = document.createElement('table');
+    table.classList.add('table');
     const headerRow = table.insertRow(); //строка
     const headers = ['Ф.И.О', 'Общий заработок', 'Размер отпускных'];
 
     //заголовки таблицы
     for (const header of headers) {
       const th = document.createElement('th');
+      th.classList.add('th');
       th.textContent = header;
       headerRow.appendChild(th);
     }
@@ -94,6 +105,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     //вставляем готовую таблицу
     outputDiv.appendChild(table);
-  }
+  };
 });
-
