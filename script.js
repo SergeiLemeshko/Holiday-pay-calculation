@@ -1,19 +1,28 @@
-//780 000 - 1, 560 000 - 2, 960 0000 - 3
-
 document.addEventListener('DOMContentLoaded', () => {
-  const fileInput = document.getElementById('fileInput');
-  const calculateButton = document.getElementById('calculateButton');
+  const fileInput = document.querySelector('.file-input');
+  const calculateButton = document.querySelector('.button');
   const outputDiv = document.getElementById('output');
-  let names = []; //Ф.И.О. каждого сотрудника
-  let total = []; //общая зар. плата каждого сотрудника
-  let chunkedArray = null;
+  let names = []; //массив Ф.И.О. каждого сотрудника
+  let totalSalary = []; //массив общей ЗП каждого сотрудника
+  let chunkedArray = []; // массивы с информацией по каждому сотруднику
 
-  calculateButton.addEventListener('click', calculateVacation);
+  //вешаем на кнопку "Рассчитать" слушатель события click
+  calculateButton.addEventListener('click', getData);
 
-  function calculateVacation() {
+  //получает данные, делит на массивы по сотрудникам, предупреждает, если не выбран файл
+  function getData() {
     const file = fileInput.files[0];
     if (!file) {
-      console.log('Please select a file.');
+      // Добавляем текст предупреждения, если не выбран файл
+      const warningDiv = document.createElement('div');
+      warningDiv.classList.add('warning');
+      warningDiv.textContent = 'Пожалуйста, выберите файл!';
+      // Чистим текст предупреждения через 2 секунды
+      setTimeout(() => {
+        warningDiv.textContent = '';
+      }, 2000);
+      // Добавляем предупреждение на страницу
+      document.body.appendChild(warningDiv);
       return;
     }
 
@@ -27,66 +36,63 @@ document.addEventListener('DOMContentLoaded', () => {
 
       chunkedArray = splitArrayIntoChunks(jsonData, 12); //разделенные массивы
 
-      retTotal(chunkedArray);
-      displayResults(names, total);
+      getTotal(chunkedArray);
+      displayResults(names, totalSalary);
     };
     reader.readAsArrayBuffer(file);
-    // displayResults(names, total);
-  }
+  };
 
-    //делим общий массив объектов на отдельные массивы по сотрудникам
-    function splitArrayIntoChunks(array, chunkSize) {
-      let chunks = [];
-      for (let i = 0; i < array.length; i += chunkSize) {
-        names.push(array[i]['ФИО']); // Ф.И.О. каждого сотрудника
-        chunks.push(array.slice(i, i + chunkSize));
-      }
-      // displayResults(names, total);
-      return chunks;
+  //делит общий массив объектов на отдельные массивы по сотрудникам
+  function splitArrayIntoChunks(array, chunkSize) {
+    let chunks = [];
+    for (let i = 0; i < array.length; i += chunkSize) {
+      names.push(array[i]['ФИО']); // пушим в names Ф.И.О. каждого сотрудника
+      chunks.push(array.slice(i, i + chunkSize));
     }
+    return chunks;
+  };
 
-    function retTotal(arr) {
-      for (const person of arr) {
-        if(Array.isArray(person)) {
-          //рассчитываем общую зар. плату каждого сотрудника
-          let sum = person.reduce((acc, obj) => acc + obj['ЗП'], 0);
-          total.push(sum);
-        }
+  //рассчитывает общую ЗП каждого сотрудника
+  function getTotal(arr) {
+    for (const person of arr) {
+      if(Array.isArray(person)) {
+        let sum = person.reduce((acc, obj) => acc + obj['ЗП'], 0);
+        totalSalary.push(sum);
       }
     }
+  };
 
-  function displayResults(names, zarpl) {
-    // if(names.length === 0 && zarpl.length === 0) return;
-    console.log(names.length, zarpl.length, "kkkk");
+  //показывает результат в виде таблицы
+  function displayResults(names, salary) {
     outputDiv.innerHTML = '';
 
     const table = document.createElement('table');
-    const headerRow = table.insertRow();//строка
+    const headerRow = table.insertRow(); //строка
     const headers = ['Ф.И.О', 'Общий заработок', 'Размер отпускных'];
 
-    //заголовки
+    //заголовки таблицы
     for (const header of headers) {
       const th = document.createElement('th');
       th.textContent = header;
       headerRow.appendChild(th);
     }
 
-    let keys = names;
-    let values = zarpl;
-    let obj = Object.fromEntries(keys.map((key, index) => [key, values[index]]));
+    //создаём объект, где ключи - Ф.И.О., значения - ЗП, чтобы отобразить в таблице
+    let createObj = Object.fromEntries(names.map((key, index) => [key, salary[index]]));
 
-    for (let el in obj) {
-      console.log(obj[el], 'el');
+    for (let el in createObj) {
       const row = table.insertRow();
-      const fullNameCell = row.insertCell();
-      const salaryCell = row.insertCell();
-      const vacationSizeCell = row.insertCell();
+      const fullNameCell = row.insertCell(); //ячейки Ф.И.О.
+      const salaryCell = row.insertCell(); //ячейки ЗП
+      const vacationSizeCell = row.insertCell(); //ячейки размера отпускных
 
+      //заполняем ячейки данными
       fullNameCell.textContent = el;
-      salaryCell.textContent = obj[el];
-      vacationSizeCell.textContent = ((obj[el] / 247) * 28).toFixed(1);
+      salaryCell.textContent = createObj[el];
+      //общий доход делим на кол-во рабочих дней(взял среднее - 247 рабочих дней за 1 год) и умножаем на 28 дней отпуска
+      vacationSizeCell.textContent = ((createObj[el] / 247) * 28).toFixed(1);
     }
-
+    //вставляем готовую таблицу
     outputDiv.appendChild(table);
   }
 });
