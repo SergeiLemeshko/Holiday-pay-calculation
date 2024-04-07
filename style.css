@@ -111,10 +111,29 @@ body {
     width: 700px;
 }
 
+.output {
+	opacity: 1;
+}
+
 .th {
     text-align: left;
 }
 
 table, td, th {
 	border: 1px solid rgb(154, 154, 154);
+}
+
+.btn-clear {
+	opacity: 0;
+	background-color: #3a7fa2;
+	color: white;
+	padding: 10px 20px;
+	margin-top: 30px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.btn-clear:hover {
+	background-color: #2d7599;
 }

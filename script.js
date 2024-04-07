@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const calculateButton = document.querySelector('.button');
   const outputDiv = document.getElementById('output');
   const inputText = document.querySelector('.input-file__text');
+  const btnClear = document.querySelector('.btn-clear');
   let names = []; //массив Ф.И.О. каждого сотрудника
   let totalSalary = []; //массив общей ЗП каждого сотрудника
   let chunkedArray = []; // массивы с информацией по каждому сотруднику
@@ -13,7 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   //вешаем слушатель на получение названия загружаемого файла
-  fileInput.addEventListener('change', showFileText);
+  fileInput.addEventListener('input', showFileText);
+  //вешаем слушатель на кнопку очистки
+  btnClear.addEventListener('click', clearPage);
 
   //получает данные, делит на массивы по сотрудникам, предупреждает, если не выбран файл
   function getData() {
@@ -23,14 +26,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const warningDiv = document.createElement('div');
       warningDiv.classList.add('warning');
       warningDiv.textContent = 'Пожалуйста, выберите файл!';
-      // Чистим текст предупреждения через 2 секунды
+      // Чистим текст предупреждения через 1 секунду
       setTimeout(() => {
         warningDiv.textContent = '';
-      }, 2000);
+      }, 1000);
       // Добавляем предупреждение на страницу
       inputText.insertAdjacentElement('afterEnd', warningDiv);
       return;
-    }
+    } 
 
     const reader = new FileReader();
 
@@ -103,7 +106,16 @@ document.addEventListener('DOMContentLoaded', () => {
       //общий доход делим на кол-во рабочих дней(взял среднее - 247 рабочих дней за 1 год) и умножаем на 28 дней отпуска
       vacationSizeCell.textContent = ((createObj[el] / 247) * 28).toFixed(1);
     }
-    //вставляем готовую таблицу
+    //вставляем готовую таблицу и показываем кнопку "Очистить"
     outputDiv.appendChild(table);
+    btnClear.style.opacity = '1';
+  };
+
+  //чистит выбранный файл и таблицу
+  function clearPage() {
+    outputDiv.innerHTML = '';
+    inputText.innerHTML = '';
+    btnClear.style.opacity = '0';
+    fileInput.value = ''; //чистим выбранный файл
   };
 });
